@@ -12,7 +12,6 @@ The question that shaped the project became:
 
 > **What would an AI system look like if showing what it knows, what it does not know, and what its conclusions are built on were part of the architecture itself?**
 
-
 ## What it does
 
 Aeria-AI is an evidence-aware and governance-aware AI system designed to make AI-assisted analysis more inspectable.
@@ -29,12 +28,11 @@ Aeria can take source material such as documents, requirements, policies, resear
 
 Instead of returning only a generated summary, Aeria is designed to expose the state of the information behind that summary.
 
-For example, a system may have evidence supporting one part of a claim while still lacking information needed to establish another part. Aeria is designed to preserve that distinction rather than presenting the entire result as equally certain.
+For example, a system may have evidence supporting one part of a claim while still lacking information needed to establish another part. Aeria preserves that distinction rather than presenting the entire result as equally certain.
 
 The goal is not to make AI appear more confident.
 
 The goal is to make the system **more accountable to the information underneath its conclusions**.
-
 
 ## How we built it
 
@@ -42,31 +40,25 @@ We approached Aeria as a layered system.
 
 Rather than starting with a chatbot interface and adding transparency features afterward, we designed the information model first.
 
-The architecture separates concepts such as evidence, claims, requirements, provenance, and proof state so they can be inspected independently.
+The architecture separates evidence, claims, provenance, requirements, proof state, and unresolved information so they can be inspected independently.
 
-Conceptually, a claim can be represented as a function of several inputs:
+A claim is not treated as automatically valid simply because supporting material exists. Aeria keeps the different parts of the evaluation process separate so the system can distinguish between what evidence is available, where that evidence came from, what requirements apply, and what information still needs to be resolved.
 
-$$
-C = f(E, P, R, U)
-$$
+This allows Aeria to represent states such as:
 
-where:
+- evidence exists, but does not fully support the claim
+- supporting evidence is present, but provenance is incomplete
+- a claim is supported, but an applicable requirement has not been satisfied
+- required information is missing
+- a claim still requires human review or verification
 
-- \(C\) = claim state
-- \(E\) = available evidence
-- \(P\) = provenance information
-- \(R\) = applicable requirements or rules
-- \(U\) = unresolved or missing information
-
-This matters because the existence of evidence does not automatically mean a claim is fully established.
-
-Aeria therefore treats these information states independently instead of reducing everything to a single confidence score.
+This matters because evidence, provenance, requirements, and unresolved information are not interchangeable. The presence of evidence does not automatically mean a claim is established, and the existence of a source does not automatically mean every conclusion drawn from it is valid.
 
 The project was built around several connected layers.
 
 ### Evidence layer
 
-The evidence layer organizes the material supporting or relating to a claim. Evidence is represented separately so that the system can distinguish between the existence of information and the strength of support that information provides.
+The evidence layer organizes material supporting or relating to a claim. Evidence is represented separately so the system can distinguish between the existence of information and the degree to which that information actually supports a conclusion.
 
 ### Claim layer
 
@@ -87,8 +79,6 @@ Aeria is designed so that humans can review, challenge, verify, or update system
 ### Interface layer
 
 The interface translates these underlying states into something understandable without requiring users to understand the entire technical architecture operating underneath them.
-
-
 
 ## Challenges we ran into
 
@@ -139,7 +129,6 @@ We are especially proud of the decision to make missing information visible.
 Aeria does not treat uncertainty as something that should automatically be hidden or smoothed over with generated language. If the system does not have enough information to establish something, that limitation should remain visible to the user.
 
 That sounds like a small design decision, but it changes the behavior of the entire product.
-
 
 ## What we learned
 
