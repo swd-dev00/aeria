@@ -16,20 +16,24 @@ import {
 
 const categories = [
   [
-    "mobility",
-    "Mobility access",
-    /\b(wheelchair|step.free|ramp|lift|elevator|mobility)\b/i,
+    "decision",
+    "Decision or stated reason",
+    /\b(decision|denied|approved|reason|because|determination|eligible|ineligible|available|unavailable|accepted|rejected)\b/i,
   ],
   [
-    "communication",
-    "Communication access",
-    /\b(caption\w*|interpreter\w*|hearing|sign language)\b/i,
+    "process",
+    "Process, review, or contact path",
+    /\b(review|appeal|request|contact|submit|process|reconsider|response|respond)\w*\b/i,
   ],
-  ["sensory", "Sensory access", /\b(quiet|sensory|low.stimulation)\b/i],
   [
-    "request",
-    "Request process",
-    /\b(accommodation|accessibility request|contact|email)\b/i,
+    "timing",
+    "Timing and receipt",
+    /\b(receiv\w*|submit\w*|timestamp|deadline|before|after|date|time)\b/i,
+  ],
+  [
+    "authority",
+    "Rule or authority cited",
+    /\b(policy|rule|regulation|procedure|criteria|requirement|standard)\b/i,
   ],
 ];
 export function extractFindings(policy) {
@@ -52,8 +56,8 @@ export function extractFindings(policy) {
       status: passages.length ? "PASSAGE_IDENTIFIED" : "NOT_DOCUMENTED",
       passages,
       boundary: passages.length
-        ? "A related passage was identified. Wording, conditions, and negations remain controlling; this does not establish availability or adequacy."
-        : "No matching passage was identified by this literal method in the supplied document. Support may exist elsewhere or use different wording.",
+        ? "A related passage was identified. Wording, conditions, and negations remain controlling; this does not establish correctness, intent, or remedy."
+        : "No matching passage was identified by this literal method in the supplied source. Relevant evidence may exist elsewhere or use different wording.",
     };
   });
 }
@@ -155,7 +159,7 @@ export function analyze(db, caseId, actor, input) {
   });
 }
 export function submitRequest(db, caseId, actor, content) {
-  requireText(content, "Requested support", 5000);
+  requireText(content, "Requested record", 5000);
   if (actor.kind !== "HUMAN_CASE_HOLDER")
     throw new HttpError(403, "A case holder must submit a request.");
   return transaction(db, () => {
@@ -175,7 +179,7 @@ export function submitRequest(db, caseId, actor, content) {
       requestId,
       state: "SUBMITTED",
       boundary:
-        "Recorded locally. This is not proof of external delivery or organizer acknowledgement.",
+        "Recorded locally. This is not proof of external delivery or institutional acknowledgement.",
     };
   });
 }
@@ -291,13 +295,13 @@ export function exportPacket(db, caseId, analysisId, actor) {
 export function seedDemo(db) {
   db.prepare("INSERT OR IGNORE INTO institutions VALUES (?,?,?)").run(
     "demo-institution",
-    "Synthetic demo organizer",
+    "Demo Institution",
     1,
   );
   db.prepare("INSERT OR IGNORE INTO members VALUES (?,?,?,?,?)").run(
     "demo-organizer",
     "demo-institution",
-    "Demo organizer",
+    "Demo caseworker",
     1,
     JSON.stringify(["READ", "ANALYZE", "ACKNOWLEDGE", "EXPORT"]),
   );

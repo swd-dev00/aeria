@@ -27,9 +27,9 @@ export function equalHash(a, b) {
   );
 }
 export const SCOPE =
-  "Valid only for the supplied policy document and version. Not documented does not mean not available.";
+  "Valid only for the supplied source record and version. Not documented in this source does not mean absent from the institution's full record.";
 export const AUTHORITY =
-  "Extraction and classification only. No legal compliance determination, acknowledgement of a request, or initiation of escalation. Those require separately authorized human actions.";
+  "Extraction and classification only. No determination of legal compliance, intent, fault, remedy, or final case outcome. Acknowledgement and institutional actions require separately authorized human operators.";
 export const METHOD = {
   name: "literal-passage-extraction",
   version: "1",
@@ -37,12 +37,12 @@ export const METHOD = {
   model: null,
 };
 export const LIMITS =
-  "Verification establishes consistency of the supplied record, not truth, legal compliance, delivery, identity assurance, or completeness of history. No external anchor or trusted timestamp is configured; a database administrator can rewrite an entire record and recompute its hashes.";
+  "Verification establishes internal consistency of the preserved source, findings, and recorded actions, not truth, completeness, legal compliance, delivery, or identity assurance. No external anchor or trusted timestamp is configured; a database administrator can rewrite an entire record and recompute its hashes.";
 export const ESTABLISHES =
-  "The supplied source, recorded findings, stated method, and locally recorded actions are bound by these hashes.";
+  "The supplied source record, recorded findings, stated method, and locally recorded actions are bound by these hashes.";
 export function receiptBody(a, p) {
   return {
-    schema: "aeria.policy-receipt.v1",
+    schema: "aeria.source-receipt.v1",
     canonicalization: "aeria-canonical-json-v1",
     analysisId: a.id,
     caseId: a.caseId,

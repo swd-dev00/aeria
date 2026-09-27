@@ -60,7 +60,7 @@ async function boot(t, options = {}) {
     const result = await call("/_api/aeria-case-review", {
       ...c,
       policyText:
-        "  Wheelchair access is not available at the rear door.\r\nCaptions may be requested.\nContact the organizer.  ",
+        "  Your application was denied because the required identifier was missing.\r\nA review may be requested.\nContact the records office.  ",
       policyVersion: "provided-v1",
     });
     assert.equal(result.status, 201);
@@ -111,19 +111,19 @@ test("original page and auth routes exist; Microsoft and demo auth fail closed b
   );
 });
 
-test("findings preserve negations and exact sources without inferring availability", async (t) => {
+test("findings preserve exact source wording without inferring beyond the record", async (t) => {
   const a = await boot(t),
     record = await a.newAnalysis(await a.newCase());
   const data = (await a.call("/api/records/read", record)).body;
   assert.equal(data.policy.hash, sha256(data.policy.text));
-  assert.match(data.policy.text, /^  Wheelchair/);
+  assert.match(data.policy.text, /^  Your application/);
   assert.match(
     data.analysis.scope,
-    /Not documented does not mean not available/,
+    /Not documented in this source does not mean absent/,
   );
   assert.equal(data.analysis.method.model, null);
   assert.equal(data.analysis.findings[0].status, "PASSAGE_IDENTIFIED");
-  assert.match(data.analysis.findings[0].passages[0].text, /not available/);
+  assert.match(data.analysis.findings[0].passages[0].text, /denied because/);
   assert.equal(data.analysis.findings[2].status, "NOT_DOCUMENTED");
   assert.ok(
     data.analysis.findings.every(
