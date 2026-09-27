@@ -1,0 +1,206 @@
+## Inspiration
+
+Aeria-AI started from a simple problem: AI can generate answers very quickly, but it is still difficult to understand what those answers are actually built on.
+
+In research, education, public systems, governance, and other high-stakes environments, a fluent response is not enough. People need to know which evidence supports a claim, which parts are uncertain, what information is missing, where the source came from, and whether the system is operating under relevant requirements or constraints.
+
+That is the gap we wanted to explore with Aeria.
+
+Instead of building another chatbot, we wanted to build infrastructure around AI output. The central idea was to treat evidence, claims, provenance, uncertainty, missing information, and governance as separate parts of the system rather than collapsing everything into one generated answer.
+
+The question that shaped the project became:
+
+> **What would an AI system look like if showing what it knows, what it does not know, and what its conclusions are built on were part of the architecture itself?**
+
+
+## What it does
+
+Aeria-AI is an evidence-aware and governance-aware AI system designed to make AI-assisted analysis more inspectable.
+
+Aeria can take source material such as documents, requirements, policies, research, or structured information and organize the result into a system that distinguishes between:
+
+- evidence
+- claims
+- provenance
+- missing information
+- unresolved questions
+- governance requirements
+- human review states
+
+Instead of returning only a generated summary, Aeria is designed to expose the state of the information behind that summary.
+
+For example, a system may have evidence supporting one part of a claim while still lacking information needed to establish another part. Aeria is designed to preserve that distinction rather than presenting the entire result as equally certain.
+
+The goal is not to make AI appear more confident.
+
+The goal is to make the system **more accountable to the information underneath its conclusions**.
+
+
+## How we built it
+
+We approached Aeria as a layered system.
+
+Rather than starting with a chatbot interface and adding transparency features afterward, we designed the information model first.
+
+The architecture separates concepts such as evidence, claims, requirements, provenance, and proof state so they can be inspected independently.
+
+Conceptually, a claim can be represented as a function of several inputs:
+
+$$
+C = f(E, P, R, U)
+$$
+
+where:
+
+- \(C\) = claim state
+- \(E\) = available evidence
+- \(P\) = provenance information
+- \(R\) = applicable requirements or rules
+- \(U\) = unresolved or missing information
+
+This matters because the existence of evidence does not automatically mean a claim is fully established.
+
+Aeria therefore treats these information states independently instead of reducing everything to a single confidence score.
+
+The project was built around several connected layers.
+
+### Evidence layer
+
+The evidence layer organizes the material supporting or relating to a claim. Evidence is represented separately so that the system can distinguish between the existence of information and the strength of support that information provides.
+
+### Claim layer
+
+Claims exist independently from their supporting material. This allows Aeria to evaluate the relationship between a claim and its evidence rather than assuming that any retrieved source automatically validates the claim.
+
+### Provenance layer
+
+Aeria keeps track of where information originated and how it entered the analysis. Provenance is treated as part of the system state rather than as an optional citation added after generation.
+
+### Governance layer
+
+Requirements, policies, constraints, and review conditions can be represented alongside the information being evaluated. This allows the system to identify not only what evidence exists, but also what rules or requirements may affect how that information can be used.
+
+### Human review layer
+
+Aeria is designed so that humans can review, challenge, verify, or update system conclusions instead of treating model output as automatically authoritative.
+
+### Interface layer
+
+The interface translates these underlying states into something understandable without requiring users to understand the entire technical architecture operating underneath them.
+
+
+
+## Challenges we ran into
+
+One of the hardest challenges was deciding how much interpretation the AI should perform automatically.
+
+Generating a summary is relatively easy. Preserving the difference between evidence, inference, uncertainty, and absence is much harder.
+
+We also had to think carefully about how to represent missing information. Most software interfaces are designed to display what the system found. Aeria also needs to communicate what the system **did not find**.
+
+That distinction becomes important when the missing item is something like:
+
+- a required policy
+- supporting evidence
+- accessibility information
+- provenance
+- a deadline
+- a retention rule
+- a verification source
+
+Another challenge was scope.
+
+The concepts behind Aeria can apply to research, civic systems, education, governance, institutional workflows, and other domains. That made it easy for the project to expand too quickly.
+
+We had to continually return to the core architectural question:
+
+> **Can the system represent the relationship between a claim, its evidence, its provenance, its requirements, and what is still missing?**
+
+If that foundation works, many different applications can be built on top of it.
+
+We also had to resist turning every capability into another dashboard or surface-level feature. The harder and more important work was building the information model underneath the interface.
+
+## Accomplishments that we're proud of
+
+One of the things we are most proud of is that Aeria is not simply another interface placed on top of a language model.
+
+We designed the project around an information architecture that treats evidence, provenance, governance, uncertainty, and human review as first-class components.
+
+We also created a structure where evidence can exist independently from a claim. This allows the system to distinguish between:
+
+- evidence that exists
+- evidence that supports a claim
+- evidence that is incomplete
+- claims that still require verification
+- requirements that remain unresolved
+
+We are especially proud of the decision to make missing information visible.
+
+Aeria does not treat uncertainty as something that should automatically be hidden or smoothed over with generated language. If the system does not have enough information to establish something, that limitation should remain visible to the user.
+
+That sounds like a small design decision, but it changes the behavior of the entire product.
+
+
+## What we learned
+
+One of the biggest lessons from building Aeria is that many important AI problems are no longer purely model problems.
+
+A model can be extremely capable while the surrounding system still lacks:
+
+- provenance
+- auditability
+- evidence structure
+- governance
+- human oversight
+- information-state tracking
+
+We also learned that transparency cannot simply be added at the end of a product.
+
+If claims, sources, evidence, and requirements are not represented separately in the architecture, it becomes much more difficult to reconstruct those relationships later.
+
+Another important lesson was that **absence is data**.
+
+When a required piece of information is missing, that absence can be meaningful. A system that records only what it knows cannot accurately communicate the boundaries of its knowledge.
+
+Building Aeria shifted the question from:
+
+> **How do we make AI generate a better answer?**
+
+to:
+
+> **How do we build a system where the answer can be inspected, challenged, and understood?**
+
+## What's next for Aeria-AI
+
+The next phase of Aeria is focused on strengthening the infrastructure beneath the prototype.
+
+We want to expand:
+
+- claim-to-evidence relationships
+- provenance tracking
+- document ingestion
+- configurable governance rules
+- persistent project histories
+- human review workflows
+- evidence state changes over time
+- domain-specific analysis
+
+We also want users to be able to challenge, verify, approve, or update conclusions while preserving a record of how the system's understanding changed.
+
+Longer term, Aeria could support applications in research, education, public institutions, accessibility, governance, and other environments where AI needs to provide more than a generated response.
+
+The broader goal is to move beyond AI systems that simply answer questions.
+
+We want Aeria to help build systems that can also answer:
+
+> **What evidence supports this?**
+
+> **What is still missing?**
+
+> **Where did this information come from?**
+
+> **What rules apply here?**
+
+> **What should a human review before relying on this result?**
+
+That is the direction we believe AI infrastructure needs to move next.
